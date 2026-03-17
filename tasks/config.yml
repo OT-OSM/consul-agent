@@ -1,0 +1,24 @@
+- name: Create config dir
+  file:
+    path: "{{ consul_config_dir }}"
+    state: directory
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+
+- name: Copy agent config
+  template:
+    src: agent.hcl.j2
+    dest: "{{ consul_config_dir }}/agent.hcl"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+  notify: Restart Consul
+
+- name: Copy TLS certs
+  copy:
+    src: tls.crt
+    dest: "{{ consul_config_dir }}/tls.crt"
+
+- name: Copy agent token
+  copy:
+    content: "{{ consul_agent_token }}"
+    dest: "{{ consul_config_dir }}/agent.token"
