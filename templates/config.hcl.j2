@@ -1,7 +1,10 @@
 consul {
   address = "127.0.0.1:8501"
-  ssl = true
-  verify = false
+
+  ssl {
+    enabled = true
+    verify  = false
+  }
 }
 
 template {
