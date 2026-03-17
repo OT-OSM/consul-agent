@@ -1,0 +1,30 @@
+---
+- name: Ensure downloads directory exists
+  ansible.builtin.file:
+    path: "{{ consul_data_dir }}/downloads"
+    state: directory
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: '0755'
+
+- name: Download Consul Template
+  ansible.builtin.get_url:
+    url: "https://releases.hashicorp.com/consul-template/0.39.0/consul-template_0.39.0_linux_amd64.zip"
+    dest: "{{ consul_data_dir }}/downloads/consul-template.zip"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: '0644'
+
+- name: Install Consul Template
+  ansible.builtin.unarchive:
+    src: "{{ consul_data_dir }}/downloads/consul-template.zip"
+    dest: "{{ consul_install_dir }}"
+    remote_src: true
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: '0755'
+
+- name: Clean up zip file
+  ansible.builtin.file:
+    path: "{{ consul_data_dir }}/downloads/consul-template.zip"
+    state: absent
