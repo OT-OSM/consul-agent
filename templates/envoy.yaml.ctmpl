@@ -1,0 +1,19 @@
+static_resources:
+  clusters:
+  {{ range services }}
+  - name: {{ .Name }}
+    connect_timeout: 5s
+    type: logical_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: {{ .Name }}
+      endpoints:
+      - lb_endpoints:
+        {{ range service .Name }}
+        - endpoint:
+            address:
+              socket_address:
+                address: {{ .Address }}
+                port_value: {{ .Port }}
+        {{ end }}
+  {{ end }}
