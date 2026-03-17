@@ -1,0 +1,12 @@
+consul {
+  address = "127.0.0.1:8501"
+  ssl = true
+  verify = false
+}
+
+template {
+  source      = "/etc/consul-template/envoy.yaml.ctmpl"
+  destination = "/etc/envoy/envoy.yaml"
+
+  command = "systemctl restart envoy"
+}
