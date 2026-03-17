@@ -1,6 +1,6 @@
 ---
 - name: Ensure downloads directory exists
-  ansible.builtin.file:
+  file:
     path: "{{ consul_data_dir }}/downloads"
     state: directory
     owner: "{{ consul_user }}"
@@ -8,23 +8,44 @@
     mode: '0755'
 
 - name: Download Consul Template
-  ansible.builtin.get_url:
+  get_url:
     url: "https://releases.hashicorp.com/consul-template/0.39.0/consul-template_0.39.0_linux_amd64.zip"
     dest: "{{ consul_data_dir }}/downloads/consul-template.zip"
-    owner: "{{ consul_user }}"
-    group: "{{ consul_group }}"
     mode: '0644'
 
 - name: Install Consul Template
-  ansible.builtin.unarchive:
+  unarchive:
     src: "{{ consul_data_dir }}/downloads/consul-template.zip"
     dest: "{{ consul_install_dir }}"
     remote_src: true
+    mode: '0755'
+
+- name: Clean up zip file
+  file:
+    path: "{{ consul_data_dir }}/downloads/consul-template.zip"
+    state: absent
+
+#  create config dir
+- name: Create consul-template config directory
+  file:
+    path: /etc/consul-template
+    state: directory
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
     mode: '0755'
 
-- name: Clean up zip file
-  ansible.builtin.file:
-    path: "{{ consul_data_dir }}/downloads/consul-template.zip"
-    state: absent
+# config.hcl
+- name: Copy consul-template config
+  template:
+    src: config.hcl.j2
+    dest: /etc/consul-template/config.hcl
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+
+#  envoy template
+- name: Copy envoy template
+  template:
+    src: envoy.yaml.ctmpl
+    dest: /etc/consul-template/envoy.yaml.ctmpl
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
