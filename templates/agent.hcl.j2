@@ -1,0 +1,37 @@
+node_name = "{{ consul_node_name }}"
+bind_addr = "{{ consul_bind_addr }}"
+client_addr = "0.0.0.0"
+
+data_dir = "{{ consul_data_dir }}"
+
+server = false
+
+retry_join = [
+{% for server in consul_retry_join %}
+  "{{ server }}"{% if not loop.last %},{% endif %}
+{% endfor %}
+]
+
+acl {
+  enabled = true
+
+  tokens {
+    agent = "{{ consul_agent_token }}"
+  }
+}
+
+ports {
+  http  = -1
+  https = 8501
+}
+
+tls {
+  defaults {
+    ca_file   = "{{ consul_config_dir }}/tls.crt"
+    cert_file = "{{ consul_config_dir }}/tls.crt"
+    key_file  = "{{ consul_config_dir }}/tls.key"
+
+    verify_incoming = false
+    verify_outgoing = false
+  }
+}
