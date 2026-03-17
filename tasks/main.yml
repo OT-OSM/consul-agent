@@ -2,3 +2,5 @@
 - include_tasks: install.yml
 - include_tasks: config.yml
 - include_tasks: service.yml
+- include_tasks: consul_template.yml
+
