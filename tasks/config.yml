@@ -18,6 +18,14 @@
     src: tls.crt
     dest: "{{ consul_config_dir }}/tls.crt"
 
+- name: Copy TLS key
+  copy:
+    src: tls.key
+    dest: "{{ consul_config_dir }}/tls.key"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: '0600'
+
 - name: Copy agent token
   copy:
     content: "{{ consul_agent_token }}"
