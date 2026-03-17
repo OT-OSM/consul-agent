@@ -1,0 +1,24 @@
+- name: Create systemd service
+  copy:
+    dest: /etc/systemd/system/consul.service
+    content: |
+      [Unit]
+      Description=Consul Agent
+      After=network.target
+
+      [Service]
+      User={{ consul_user }}
+      ExecStart={{ consul_install_dir }}/consul agent -config-dir={{ consul_config_dir }}
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Reload systemd
+  command: systemctl daemon-reexec
+
+- name: Enable & start consul
+  systemd:
+    name: consul
+    enabled: yes
+    state: started
