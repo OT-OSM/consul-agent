@@ -1,3 +1,4 @@
+{% raw %}
 static_resources:
   clusters:
   {{ range services }}
@@ -17,3 +18,4 @@ static_resources:
                 port_value: {{ .Port }}
         {{ end }}
   {{ end }}
+{% endraw %}
