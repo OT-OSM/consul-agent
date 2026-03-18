@@ -1,30 +1,40 @@
-node_name = "{{ consul_node_name }}"
-bind_addr = "{{ consul_bind_addr }}"
-client_addr = "0.0.0.0"
+# Core Settings
+datacenter = "dc1"
+data_dir   = "{{ consul_data_dir }}"
 
-data_dir = "{{ consul_data_dir }}"
+# Dynamic naming based on the server's actual hostname
+node_name  = "{{ ansible_hostname }}" 
+server     = false
 
-server = false
+# Your fixed cluster encryption key
+encrypt = "Xeh3YlhzvoSgmoJOIHEtgoWj7P2Y/vvYkK7NsAzBmiI="
 
+# Pointing to your 3-node cluster
 retry_join = [
 {% for server in consul_retry_join %}
   "{{ server }}"{% if not loop.last %},{% endif %}
 {% endfor %}
 ]
 
+# Networking - Dynamic IP detection
+bind_addr   = "{{ ansible_default_ipv4.address }}"
+client_addr = "0.0.0.0"
+
+# ACL Settings
 acl {
   enabled = true
-
   tokens {
     agent = "{{ consul_agent_token }}"
   }
 }
 
+# Ports Configuration (Disabling HTTP 8500, enabling HTTPS 8501)
 ports {
   http  = -1
   https = 8501
 }
 
+# TLS Settings for the LDC environment
 tls {
   defaults {
     ca_file   = "{{ consul_config_dir }}/tls.crt"
