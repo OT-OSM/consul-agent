@@ -4,26 +4,22 @@ static_resources:
   {{ range services }}
   - name: "{{ .Name }}"
     connect_timeout: 5s
-    # Using STATIC because Consul Template provides the direct IP addresses.
-    # This is the most reliable way for your LDC setup.
-    type: STATIC
+    # Switch to STRICT_DNS so Envoy uses Consul DNS for resolution
+    type: STRICT_DNS
     lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: "{{ .Name }}"
       endpoints:
       - lb_endpoints:
-        {{ range service .Name }}
         - endpoint:
             address:
               socket_address:
-                # Automatically pulls the IP (192.168.8.x) from Consul
-                address: "{{ .Address }}"
-                # Automatically pulls the Port (8080/443/etc.) from Consul
-                port_value: {{ .Port }}
-        {{ end }}
+                # Use the service DNS name instead of the IP loop
+                address: "{{ .Name }}.service.consul"
+                # Pull the port dynamically from the first instance found
+                port_value: {{ range service .Name }}{{ .Port }}{{ break }}{{ end }}
 
     # --- DYNAMIC TLS BLOCK ---
-    # This automatically adds Upstream TLS only for specified services
     {{ if .Name | regexMatch "keycloak|minio|harbor|orchestrator|wazuh|consul" }}
     transport_socket:
       name: envoy.transport_sockets.tls
@@ -36,13 +32,11 @@ static_resources:
     {{ end }}
 
     # --- AUTOMATIC HEALTH CHECK ---
-    # Ensures Envoy stops sending traffic if the service instance is down
     health_checks:
       - timeout: 2s
         interval: 5s
         unhealthy_threshold: 3
         healthy_threshold: 2
-        # TCP check is safest for mixed services (Keycloak, Minio, etc.)
         tcp_health_check: {}
   {{ end }}
 {% endraw %}
