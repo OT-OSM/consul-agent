@@ -1,0 +1,13 @@
+{
+  "service": {
+    "name": "{{ service_name }}",
+    "port": {{ service_port }},
+    "check": {
+      "id": "{{ service_name }}-check",
+      "name": "{{ service_name }} Health Check",
+      "tcp": "localhost:{{ service_port }}",
+      "interval": "10s",
+      "timeout": "2s"
+    }
+  }
+}
