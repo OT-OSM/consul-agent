@@ -1,48 +1,44 @@
 {% raw %}
 static_resources:
-  # ... (Keep your listeners block here) ...
-
   clusters:
   {{ range services }}
-    # Consul service names cannot have spaces. 
-    # This template will now generate a cluster for every service in your Consul catalog.
-    - name: {{ .Name }}
-      connect_timeout: 5s
-      
-      # Use STRICT_DNS or STATIC since we are providing the direct IPs from Consul
-      type: STRICT_DNS
-      lb_policy: ROUND_ROBIN
-      
-      load_assignment:
-        cluster_name: {{ .Name }}
-        endpoints:
-          - lb_endpoints:
-            {{ range service .Name }}
-            - endpoint:
-                address:
-                  socket_address:
-                    address: {{ .Address }}
-                    port_value: {{ .Port }}
-            {{ end }}
+  - name: {{ .Name }}
+    connect_timeout: 5s
+    # STRICT_DNS is best here because we are providing the direct IP from Consul
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: {{ .Name }}
+      endpoints:
+      - lb_endpoints:
+        {{ range service .Name }}
+        - endpoint:
+            address:
+              socket_address:
+                address: {{ .Address }}
+                port_value: {{ .Port }}
+        {{ end }}
 
-      # --- TLS LOGIC ---
-      # Many of your services (Wazuh, Consul, Keycloak, Minio, Harbor) 
-      # require TLS to communicate. This block adds it automatically based on the name.
-      {{ if .Name | contains "wazuh" "consul" "keycloak" "minio" "harbor" "orchestrator" }}
-      transport_socket:
-        name: envoy.transport_sockets.tls
-        typed_config:
-          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
-      {{ end }}
+    # --- DYNAMIC TLS BLOCK ---
+    # Only apply TLS if the service name matches your secure tools
+    {{ if .Name | regexMatch "keycloak|minio|harbor|orchestrator|wazuh|consul" }}
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          validation_context:
+            trusted_ca:
+              filename: "/etc/consul.d/tls.crt"
+    {{ end }}
 
-      # --- HEALTH CHECK LOGIC ---
-      # This ensures Envoy stops sending traffic if a service instance goes down.
-      health_checks:
-        - timeout: 2s
-          interval: 5s
-          unhealthy_threshold: 3
-          healthy_threshold: 2
-          http_health_check:
-            path: "/"
+    # --- AUTOMATIC HEALTH CHECK ---
+    health_checks:
+      - timeout: 2s
+        interval: 5s
+        unhealthy_threshold: 3
+        healthy_threshold: 2
+        # Use TCP check for general reliability across different app types
+        tcp_health_check: {}
   {{ end }}
 {% endraw %}
