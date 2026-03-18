@@ -1,3 +1,14 @@
+---
+# 1. FIX: Create the Data Dir (Must exist BEFORE the agent starts)
+- name: Create consul data directory
+  file:
+    path: "{{ consul_data_dir }}"
+    state: directory
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: '0755'
+
+# 2. Existing Task: Create config dir
 - name: Create config dir
   file:
     path: "{{ consul_config_dir }}"
@@ -5,19 +16,35 @@
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
 
+# 3. Updated Task: Copy agent config (Ensure destination is consul.hcl)
 - name: Copy agent config
   template:
     src: agent.hcl.j2
-    dest: "{{ consul_config_dir }}/agent.hcl"
+    dest: "{{ consul_config_dir }}/consul.hcl"
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
   notify: Restart Consul
 
+# 4. NEW Task: Deploy the Service Definition (Keycloak, Semaphore, etc.)
+- name: Deploy Service Definition
+  template:
+    src: service.json.j2
+    dest: "{{ consul_config_dir }}/{{ service_name }}.json"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+  # Only runs if you define a service name in your playbook
+  when: service_name is defined and service_name != ""
+  notify: Restart Consul
+
+# 5. Existing Task: Copy TLS certs
 - name: Copy TLS certs
   copy:
     src: tls.crt
     dest: "{{ consul_config_dir }}/tls.crt"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
 
+# 6. Existing Task: Copy TLS key
 - name: Copy TLS key
   copy:
     src: tls.key
@@ -26,7 +53,10 @@
     group: "{{ consul_group }}"
     mode: '0600'
 
+# 7. Existing Task: Copy agent token
 - name: Copy agent token
   copy:
     content: "{{ consul_agent_token }}"
     dest: "{{ consul_config_dir }}/agent.token"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
