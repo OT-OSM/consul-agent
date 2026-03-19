@@ -2,6 +2,7 @@
   "service": {
     "name": "{{ service_name }}",
     "port": {{ service_port }},
+    "token": "{{ consul_agent_token }}",
     "check": {
       "id": "{{ service_name }}-check",
       "name": "{{ service_name }} Health Check",
