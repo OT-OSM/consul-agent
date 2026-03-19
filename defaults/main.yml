@@ -26,3 +26,6 @@ consul_agent_token: ""
 
 # TLS
 consul_tls_enabled: false
+
+consul_http_port: 8500
+consul_https_port: 8501
