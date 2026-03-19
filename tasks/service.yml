@@ -13,35 +13,3 @@
 
       [Install]
       WantedBy=multi-user.target
-
-#  consul-template service
-- name: Create consul-template service
-  copy:
-    dest: /etc/systemd/system/consul-template.service
-    content: |
-      [Unit]
-      Description=Consul Template
-      After=network.target consul.service
-
-      [Service]
-      User={{ consul_user }}
-      ExecStart={{ consul_install_dir }}/consul-template -config=/etc/consul-template/config.hcl
-      Restart=always
-
-      [Install]
-      WantedBy=multi-user.target
-
-- name: Reload systemd
-  command: systemctl daemon-reexec
-
-- name: Enable & start consul
-  systemd:
-    name: consul
-    enabled: yes
-    state: started
-
-- name: Enable & start consul-template
-  systemd:
-    name: consul-template
-    enabled: yes
-    state: started
