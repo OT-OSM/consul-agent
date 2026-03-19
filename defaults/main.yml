@@ -30,3 +30,4 @@ consul_tls_enabled: false
 consul_http_port: 8500
 consul_https_port: 8501
 consul_encrypt_key: ""
+consul_datacenter: "dc1"
