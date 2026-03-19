@@ -25,4 +25,4 @@ consul_acl_enabled: true
 consul_agent_token: ""
 
 # TLS
-consul_tls_enable: false
+consul_tls_enabled: false
