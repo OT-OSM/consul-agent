@@ -1,5 +1,10 @@
 ---
 - include_tasks: install.yml
+
 - include_tasks: config.yml
+
+- name: Load service variables
+  ansible.builtin.include_vars: vars/main.yml
+  
 - include_tasks: service.yml
 
