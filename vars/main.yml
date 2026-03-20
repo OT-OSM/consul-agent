@@ -1,3 +1,4 @@
 ---
 service_name: "keycloak"
 service_port: 8080
+consul_agent_token: "fec50ca6-6b33-99fe-d522-cb80ec89d6f4"
