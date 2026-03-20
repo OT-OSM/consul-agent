@@ -13,3 +13,11 @@
 
       [Install]
       WantedBy=multi-user.target
+
+
+- name: Enable and Start Consul Service
+  ansible.builtin.systemd:
+    name: consul
+    enabled: yes
+    state: started
+    daemon_reload: yes
