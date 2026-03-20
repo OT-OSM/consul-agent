@@ -1,12 +1,12 @@
 {
   "service": {
-    "name": "{{ service_name }}",
-    "port": {{ service_port }},
+    "name": "{{ item.name }}",
+    "port": {{ item.port }},
     "token": "{{ consul_agent_token }}",
     "check": {
-      "id": "{{ service_name }}-check",
-      "name": "{{ service_name }} Health Check",
-      "tcp": "localhost:{{ service_port }}",
+      "id": "{{ item.name }}-check",
+      "name": "{{ item.name }} Health Check",
+      "tcp": "localhost:{{ item.port }}",
       "interval": "10s",
       "timeout": "2s"
     }

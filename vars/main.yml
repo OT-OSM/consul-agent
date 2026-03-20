@@ -1,3 +1,4 @@
 ---
-service_name: "keycloak"
-service_port: 8080
+# Variables can be statically overridden here.
+# Note: dynamic application service definitions should be defined 
+# in the inventory 'host_vars' utilizing the 'consul_services' list.

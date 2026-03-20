@@ -49,10 +49,11 @@
 - name: Deploy Service Definition
   ansible.builtin.template:
     src: service.json.j2
-    dest: "{{ consul_config_dir }}/{{ service_name }}.json"
+    dest: "{{ consul_config_dir }}/{{ item.name }}.json"
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
-  when: service_name is defined and service_name != ""
+  loop: "{{ consul_services | default([]) }}"
+  when: consul_services is defined and consul_services | length > 0
   notify: Restart Consul
   
 # 7. Existing Task: Copy agent token
