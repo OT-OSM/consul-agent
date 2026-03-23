@@ -46,13 +46,14 @@
   notify: Restart Consul
 
 # 6. NEW Task: Deploy the Service Definition (Keycloak, Semaphore, etc.)
-- name: Deploy Service Definition
+- name: Deploy Service Definitions
   ansible.builtin.template:
     src: service.json.j2
-    dest: "{{ consul_config_dir }}/{{ service_name }}.json"
+    dest: "{{ consul_config_dir }}/{{ item.name }}.json"
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
-  when: service_name is defined and service_name != ""
+  loop: "{{ consul_services }}"
+  when: consul_services is defined
   notify: Restart Consul
   
 # 7. Existing Task: Copy agent token
