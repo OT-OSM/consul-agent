@@ -22,7 +22,7 @@ consul_retry_join:
 
 # ACL
 consul_acl_enabled: true
-consul_agent_token: ""
+consul_agent_token: "fec50ca6-6b33-99fe-d522-cb80ec89d6f4"
 
 # TLS
 consul_tls_enabled: false
