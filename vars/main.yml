@@ -1,9 +1,9 @@
 ---
-consul_agent_token: "fec50ca6-6b33-99fe-d522-cb80ec89d6f4"
-
 # Define all tools here
 consul_services:
   - name: "keycloak"
     port: 8080
+    token: "{{ consul_agent_token }}"
   - name: "clickhouse"
     port: 8123
+    token: "{{ consul_agent_token }}"
