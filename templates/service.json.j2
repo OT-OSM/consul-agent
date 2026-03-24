@@ -2,7 +2,7 @@
   "service": {
     "name": "{{ item.name }}",
     "port": {{ item.port }},
-    "token": "{{ consul_agent_token }}",
+    "token": "{{ item.token }}",
     "check": {
       "id": "{{ item.name }}-check",
       "name": "{{ item.name }} Health Check",
