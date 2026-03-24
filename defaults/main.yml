@@ -24,7 +24,6 @@ consul_retry_join:
 consul_acl_enabled: true
 consul_agent_token: "fec50ca6-6b33-99fe-d522-cb80ec89d6f4"
 
-consul_encrypt_key: "Xeh3YlhzvoSgmoJOIHEtgoWj7P2Y/vvYkK7NsAzBmiI="
 
 # TLS
 consul_tls_enabled: false
