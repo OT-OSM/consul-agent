@@ -54,7 +54,7 @@
     group: "{{ consul_group }}"
   loop: "{{ consul_services }}"
   when: consul_services is defined
-  notify: Restart Consul
+  notify: Reload Consul
   
 # 7. Existing Task: Copy agent token
 - name: Copy agent token
