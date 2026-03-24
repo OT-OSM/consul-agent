@@ -1,9 +1,19 @@
 ---
-# Define all tools here
+# # Define all tools here
+# consul_services:
+#   - name: "keycloak"
+#     port: 8080
+#     token: "{{ consul_agent_token }}"
+#   - name: "clickhouse"
+#     port: 8123
+#     token: "{{ consul_agent_token }}"
 consul_services:
   - name: "keycloak"
     port: 8080
     token: "{{ consul_agent_token }}"
+    group: "keycloak"
+
   - name: "clickhouse"
     port: 8123
     token: "{{ consul_agent_token }}"
+    group: "clickhouse"
