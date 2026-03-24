@@ -53,9 +53,11 @@
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
   loop: "{{ consul_services }}"
-  when: consul_services is defined
+  when:
+    - consul_services is defined
+    - item.group in group_names
   notify: Reload Consul
-  
+    
 # 7. Existing Task: Copy agent token
 - name: Copy agent token
   ansible.builtin.copy:
