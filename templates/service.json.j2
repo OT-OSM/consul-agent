@@ -5,8 +5,9 @@
     "token": "{{ item.token }}",
     "check": {
       "id": "{{ item.name }}-check",
-      "name": "{{ item.name }} Health Check",
-      "tcp": "localhost:{{ item.port }}",
+      "name": "{{ item.name }} HTTPS Health Check",
+      "http": "https://{{ item.name }}.service.consul/health",
+      "tls_skip_verify": true,
       "interval": "10s",
       "timeout": "2s"
     }
