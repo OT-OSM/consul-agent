@@ -17,3 +17,8 @@ consul_services:
     port: 8123
     token: "{{ consul_agent_token }}"
     group: "clickhouse"
+
+  - name: "opensearch"
+    port: 5601
+    token: "{{ consul_agent_token }}"
+    group: "opensearch"
