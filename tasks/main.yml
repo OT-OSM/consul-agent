@@ -1,12 +1,13 @@
 ---
-- name: Check if host is a valid consul service node
-  ansible.builtin.set_fact:
-    is_valid_node: "{{ ('keycloak' in group_names) or ('clickhouse' in group_names) or ('opensearch' in group_names) }}"
-
-- name: Stop execution if not a valid node
+# 1. This is the "Safety Gate"
+- name: Stop if server is not Keycloak, Clickhouse, or Opensearch
   ansible.builtin.meta: end_host
-  when: not is_valid_node
-  
+  when: 
+    - "'keycloak' not in group_names"
+    - "'clickhouse' not in group_names"
+    - "'opensearch' not in group_names"
+
+# 2. Only if the server survives the gate, load vars and continue
 - name: Load service variables
   ansible.builtin.include_vars: vars/main.yml
 
