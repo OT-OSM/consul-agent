@@ -1,16 +1,18 @@
 ---
-# 1. This is the "Safety Gate"
-- name: Stop if server is not Keycloak, Clickhouse, or Opensearch
-  ansible.builtin.meta: end_host
-  when: 
-    - "'keycloak' not in group_names"
-    - "'clickhouse' not in group_names"
-    - "'opensearch' not in group_names"
-
-# 2. Only if the server survives the gate, load vars and continue
+# 1. LOAD THE DATA FIRST (So we can check it)
 - name: Load service variables
   ansible.builtin.include_vars: vars/main.yml
 
+# 2. THE GENERIC GATE: Stop if this specific host has no services defined
+- name: Stop if no consul services match this host
+  ansible.builtin.meta: end_host
+  when: 
+    - consul_services is defined
+    # This checks if the host's Proxmox group exists in your consul_services list
+    - consul_services | selectattr('group', 'in', group_names) | list | length == 0
+  tags: always
+
+# 3. RUN THE REST
 - include_tasks: install.yml
 - include_tasks: config.yml
 - include_tasks: service.yml
