@@ -3,14 +3,14 @@
 - name: Load service variables
   ansible.builtin.include_vars: vars/main.yml
 
-# 2. THE GENERIC GATE: Stop if this specific host has no services defined
-- name: Stop if no consul services match this host
-  ansible.builtin.meta: end_host
-  when: 
-    - consul_services is defined
-    # This checks if the host's Proxmox group exists in your consul_services list
-    - consul_services | selectattr('group', 'in', group_names) | list | length == 0
-  tags: always
+# # 2. THE GENERIC GATE: Stop if this specific host has no services defined
+# - name: Stop if no consul services match this host
+#   ansible.builtin.meta: end_host
+#   when: 
+#     - consul_services is defined
+#     # This checks if the host's Proxmox group exists in your consul_services list
+#     - consul_services | selectattr('group', 'in', group_names) | list | length == 0
+#   tags: always
 
 # 3. RUN THE REST
 - include_tasks: install.yml
