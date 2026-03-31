@@ -54,7 +54,7 @@
     group: "{{ consul_group }}"
   loop: "{{ consul_services }}"
   when:
-    - consul_services is defined
+    #- consul_services is defined
     - item.group in group_names
   tags: [ "services", "consul_config" ]
   notify: Reload Consul
