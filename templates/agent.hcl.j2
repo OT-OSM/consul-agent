@@ -9,10 +9,15 @@ server     = false
 # Encryption key
 encrypt = "{{ consul_encrypt_key }}"
 
-# Pointing to your 3-node cluster
+# ==========================================================
+# OPTIMIZED: Dynamic Discovery using Proxmox Tags
+# ==========================================================
 retry_join = [
-{% for server in consul_retry_join %}
-  "{{ server }}"{% if not loop.last %},{% endif %}
+{% set server_ips = [] %}
+{% for host in groups['all'] %}
+  {% if 'consul_server' in hostvars[host]['tags'] | default([]) %}
+    "{{ host }}"{% if not loop.last %},{% endif %}
+  {% endif %}
 {% endfor %}
 ]
 
