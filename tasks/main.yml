@@ -12,6 +12,13 @@
 #     - consul_services | selectattr('group', 'in', group_names) | list | length == 0
 #   tags: always
 
+- name: Gate - Run only on tagged Clients OR Servers
+  ansible.builtin.meta: end_host
+  when: 
+    - tags is defined
+    - (tags | intersect(['keycloak', 'clickhouse', 'opensearch', 'consul_server']) | length == 0)
+  tags: always
+
 # 3. RUN THE REST
 - include_tasks: install.yml
 - include_tasks: config.yml
