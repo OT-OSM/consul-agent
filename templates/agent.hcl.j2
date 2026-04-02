@@ -13,9 +13,8 @@ encrypt = "{{ consul_encrypt_key }}"
 # OPTIMIZED: Dynamic Discovery using Proxmox Tags
 # ==========================================================
 retry_join = [
-{% set server_ips = [] %}
 {% for host in groups['all'] %}
-  {% if 'consul_server' in hostvars[host]['tags'] | default([]) %}
+  {% if 'role_consul_server' in hostvars[host]['tags'] | default([]) %}
     "{{ host }}"{% if not loop.last %},{% endif %}
   {% endif %}
 {% endfor %}
