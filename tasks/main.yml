@@ -12,7 +12,7 @@
   ansible.builtin.meta: end_host
   when: >
     tags is not defined or 
-    (tags | intersect(['role_keycloak', 'role_clickhouse', 'role_opensearch', 'role_consul_server']) | length == 0)
+    (tags | intersect(['role_keycloak', 'role_clickhouse', 'role_opensearch']) | length == 0)
   tags: always
   
 # 4. RUN THE REST
