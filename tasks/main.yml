@@ -8,15 +8,13 @@
   debug:
     var: tags
 
-# 3. THE UPDATED GATE: 
-# This version stops if 'tags' is missing OR if the tags don't match our list.
 - name: Gate - Stop if host is not a designated Consul node
   ansible.builtin.meta: end_host
   when: >
     tags is not defined or 
-    (tags | intersect(['keycloak', 'clickhouse', 'opensearch', 'consul_server']) | length == 0)
+    (tags | intersect(['role_keycloak', 'role_clickhouse', 'role_opensearch', 'role_consul_server']) | length == 0)
   tags: always
-
+  
 # 4. RUN THE REST
 - include_tasks: install.yml
 - include_tasks: config.yml
