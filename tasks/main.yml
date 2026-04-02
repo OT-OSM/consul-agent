@@ -8,23 +8,11 @@
   debug:
     var: tags
 
-# - name: Gate - Stop if host is not a designated Consul node
-#   ansible.builtin.meta: end_host
-#   when: >
-#     tags is not defined or 
-#     (tags | intersect(['role_keycloak', 'role_clickhouse', 'role_opensearch']) | length == 0)
-#   tags: always
-
 - name: Gate - Stop if host is not a designated Consul node
   ansible.builtin.meta: end_host
   when: >
     tags is not defined or 
-    (tags | intersect([
-      'role_keycloak', 'role-keycloak', 'keycloak',
-      'role_clickhouse', 'role-clickhouse', 'clickhouse',
-      'role_opensearch', 'role-opensearch', 'opensearch',
-      'role_consul_server', 'role-consul_server', 'consul_server'
-    ]) | length == 0)
+    (tags | intersect(['role_keycloak', 'role_clickhouse', 'role_opensearch', 'consul_server']) | length == 0)
   tags: always
   
 # 4. RUN THE REST
