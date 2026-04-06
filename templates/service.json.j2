@@ -1,16 +1,14 @@
 {
   "service": {
-    "id": "{{ item.name }}-{{ ansible_hostname }}",
     "name": "{{ item.name }}",
-    "tags": {{ tags | to_json }},
-    "meta": {
-      "proxmox_node": "{{ node }}",
-      "vmid": "{{ vmid }}"
-    },
     "port": {{ item.port }},
+    "token": "{{ item.token }}",
     "check": {
+      "id": "{{ item.name }}-check",
+      "name": "{{ item.name }} Health Check",
       "tcp": "localhost:{{ item.port }}",
-      "interval": "10s"
+      "interval": "10s",
+      "timeout": "2s"
     }
   }
 }
