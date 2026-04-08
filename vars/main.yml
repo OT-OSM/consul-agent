@@ -15,14 +15,14 @@ consul_services:
     token: "{{ consul_agent_token }}"
     group: "role_opensearch"
 
-  # - name: "wazuh"
-  #   port: 
-  #   token: "{{ consul_agent_token }}"
-  #   group: "role_wazuh"
+  - name: "wazuh"
+    port: 5601
+    token: "{{ consul_agent_token }}"
+    group: "role_wazuh"
 
-  # - name: "minio"
-  #   port: 
-  #   token: "{{ consul_agent_token }}"
-  #   group: "role_minio"
+  - name: "minio"
+    port: 8443
+    token: "{{ consul_agent_token }}"
+    group: "role_minio"
 
   
