@@ -1,12 +1,4 @@
 ---
-# # Define all tools here
-# consul_services:
-#   - name: "keycloak"
-#     port: 8080
-#     token: "{{ consul_agent_token }}"
-#   - name: "clickhouse"
-#     port: 8123
-#     token: "{{ consul_agent_token }}"
 consul_services:
   - name: "keycloak"
     port: 8080
@@ -22,3 +14,15 @@ consul_services:
     port: 5601
     token: "{{ consul_agent_token }}"
     group: "role_opensearch"
+
+  # - name: "wazuh"
+  #   port: 
+  #   token: "{{ consul_agent_token }}"
+  #   group: "role_wazuh"
+
+  # - name: "minio"
+  #   port: 
+  #   token: "{{ consul_agent_token }}"
+  #   group: "role_minio"
+
+  
