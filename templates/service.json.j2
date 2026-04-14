@@ -6,7 +6,8 @@
     "check": {
       "id": "{{ item.name }}-check",
       "name": "{{ item.name }} Health Check",
-      "tcp": "localhost:{{ item.port }}",
+      #"tcp": "localhost:{{ item.port }}",
+      "http": "http://localhost:{{ item.port }}/",
       "interval": "10s",
       "timeout": "2s"
     }
