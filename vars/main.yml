@@ -1,19 +1,19 @@
 ---
 consul_services:
   - name: "keycloak"
-    port: 8080
+    url : https://keycloak.opstree.dev/
     token: "{{ consul_agent_token }}"
     group: "role_keycloak"
 
   - name: "clickhouse"
-    port: 8123
+    url : https://clickhouse.opstree.dev/
     token: "{{ consul_agent_token }}"
     group: "role_clickhouse"
 
-  - name: "opensearch"
-    port: 5601
-    token: "{{ consul_agent_token }}"
-    group: "role_opensearch"
+  # - name: "opensearch"
+  #   port: 5601
+  #   token: "{{ consul_agent_token }}"
+  #   group: "role_opensearch"
 
   - name: "wazuh"
     port: 5601
@@ -21,7 +21,7 @@ consul_services:
     group: "role_wazuh"
 
   - name: "minio"
-    port: 8443
+    url : https://minio.ldc.opstree.dev:8443/
     token: "{{ consul_agent_token }}"
     group: "role_minio"
 
