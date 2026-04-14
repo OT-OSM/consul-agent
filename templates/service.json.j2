@@ -1,12 +1,16 @@
 {
   "service": {
     "name": "{{ item.name }}",
-    "port": {{ item.port }},
+    {% if item.port is defined %}"port": {{ item.port }},{% endif %}
     "token": "{{ item.token }}",
     "check": {
       "id": "{{ item.name }}-check",
       "name": "{{ item.name }} Health Check",
-      "http": "http://localhost:{{ item.port }}/",
+      {% if item.port is defined %}
+      "http": "http://localhost:{{ item.port }}{{ item.health_path | default('/') }}",
+      {% else %}
+      "http": "http://localhost{{ item.health_path | default('/') }}",
+      {% endif %}
       "interval": "10s",
       "timeout": "2s"
     }
