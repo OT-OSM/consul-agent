@@ -2,17 +2,18 @@
   "service": {
     "name": "{{ item.name }}",
     {% if item.port is defined %}"port": {{ item.port }},{% endif %}
-    "token": "{{ item.token }}",
+    "token": "{{ item.token }}"{% if item.url is defined or item.port is defined %},
     "check": {
       "id": "{{ item.name }}-check",
       "name": "{{ item.name }} Health Check",
-      {% if item.port is defined %}
-      "http": "http://localhost:{{ item.port }}{{ item.health_path | default('/') }}",
-      {% else %}
-      "http": "http://localhost{{ item.health_path | default('/') }}",
+      {% if item.url is defined %}
+      "http": "{{ item.url | regex_replace('/$', '') }}{% if item.port is defined %}:{{ item.port }}{% endif %}/",
+      "tls_skip_verify": true,
+      {% elif item.port is defined %}
+      "http": "http://localhost:{{ item.port }}/",
       {% endif %}
       "interval": "10s",
       "timeout": "2s"
-    }
+    }{% endif %}
   }
 }
