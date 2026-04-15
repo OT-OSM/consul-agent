@@ -2,11 +2,13 @@
 consul_services:
   - name: "keycloak"
     url : https://keycloak.opstree.dev/
+    port: 8080
     token: "{{ consul_agent_token }}"
     group: "role_keycloak"
 
   - name: "clickhouse"
     url : https://clickhouse.opstree.dev/
+    port: 8123
     token: "{{ consul_agent_token }}"
     group: "role_clickhouse"
 
@@ -17,6 +19,7 @@ consul_services:
 
   - name: "wazuh"
     url : https://wazuh.opstree.dev/
+    port: 5601
     token: "{{ consul_agent_token }}"
     group: "role_wazuh"
 
