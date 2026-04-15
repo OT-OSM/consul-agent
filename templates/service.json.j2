@@ -7,10 +7,10 @@
       "id": "{{ item.name }}-check",
       "name": "{{ item.name }} Health Check",
       {% if item.url is defined %}
-      "http": "{{ item.url | regex_replace('/$', '') }}{% if item.port is defined %}:{{ item.port }}{% endif %}/",
+      "http": "{{ item.url }}",
       "tls_skip_verify": true,
-      {% elif item.port is defined %}
-      "http": "http://localhost:{{ item.port }}/",
+      {% else %}
+      "http": "http://{{ ansible_default_ipv4.address | default('localhost') }}:{{ item.port }}/",
       {% endif %}
       "interval": "10s",
       "timeout": "2s"
