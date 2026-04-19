@@ -1,6 +1,6 @@
 ---
 consul_services:
-  - name: "keycloak"
+  - name: "keycloak-master"
     url : https://keycloak.opstree.dev/
     port: 8080
     token: "{{ consul_agent_token }}"
