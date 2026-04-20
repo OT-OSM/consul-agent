@@ -28,7 +28,7 @@ consul_services:
     token: "{{ consul_agent_token }}"
     group: "role_minio"
 
-  - name: "wazuh"
+  - name: "nexus"
     url : https://nexus.opstree.dev/
     port: 8081
     token: "{{ consul_agent_token }}"
