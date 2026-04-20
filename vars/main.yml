@@ -34,12 +34,12 @@ consul_services:
     token: "{{ consul_agent_token }}"
     group: "role_nexus"
 
-  - name: "mysql-master"
+  - name: "dev-mysql-master"
     port: 3306
     token: "{{ consul_agent_token }}"
     group: "role_agentmysql"
 
-  - name: "mysql-slave"
+  - name: "dev-mysql-slave"
     port: 3306
     token: "{{ consul_agent_token }}"
     group: "role_slavemysql"
