@@ -8,4 +8,4 @@
 - name: Reload Consul
   ansible.builtin.command: consul reload
   environment:
-    CONSUL_HTTP_TOKEN: "{{ {{ consul_management_token }} }}"
+    CONSUL_HTTP_TOKEN: "{{ consul_management_token }}"
