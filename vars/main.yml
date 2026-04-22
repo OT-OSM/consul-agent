@@ -18,7 +18,6 @@ consul_services:
   #   group: "role_opensearch"
 
   - name: "wazuh"
-    url : https://wazuh.opstree.dev/
     port: 5601
     token: "{{ consul_agent_token }}"
     group: "role_wazuh"
