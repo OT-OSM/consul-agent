@@ -30,6 +30,7 @@ acl {
   enabled = true
   tokens {
     agent = "{{ consul_agent_token }}"
+    default = "{{ consul_management_token }}"
   }
 }
 {% endif %}
