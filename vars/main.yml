@@ -29,16 +29,17 @@ consul_services:
     group: "role_minio"
 
   - name: "nexus"
+    url : https://nexus.opstree.dev/
     port: 8081
     token: "{{ consul_agent_token }}"
     group: "role_nexus"
 
-  # - name: "dev-mysql-master"
-  #   port: 3306
-  #   token: "{{ consul_agent_token }}"
-  #   group: "role_agentmysql"
+  - name: "dev-mysql-master"
+    port: 3306
+    token: "{{ consul_agent_token }}"
+    group: "role_agentmysql"
 
-  # - name: "dev-mysql-slave"
-  #   port: 3306
-  #   token: "{{ consul_agent_token }}"
-  #   group: "role_slavemysql"
+  - name: "dev-mysql-slave"
+    port: 3306
+    token: "{{ consul_agent_token }}"
+    group: "role_slavemysql"
