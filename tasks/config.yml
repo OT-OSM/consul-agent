@@ -1,0 +1,69 @@
+---
+# 1. FIX: Create the Data Dir (Must exist BEFORE the agent starts)
+- name: Create consul data directory
+  ansible.builtin.file:
+    path: "{{ consul_data_dir }}"
+    state: directory
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: '0755'
+    
+# 2. Existing Task: Create config dir
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ consul_config_dir }}"
+    state: directory
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: '0755'
+
+# 3. Existing Task: Copy TLS certs
+- name: Copy TLS certs
+  ansible.builtin.copy:
+    src: tls.crt
+    dest: "{{ consul_config_dir }}/tls.crt"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+  when: consul_tls_enabled
+
+# 4. Existing Task: Copy TLS key
+- name: Copy TLS key
+  ansible.builtin.copy:
+    src: tls.key
+    dest: "{{ consul_config_dir }}/tls.key"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: '0600'
+  when: consul_tls_enabled
+
+# 5. Updated Task: Copy agent config (Ensure destination is consul.hcl)
+- name: Copy agent config
+  ansible.builtin.template:
+    src: agent.hcl.j2
+    dest: "{{ consul_config_dir }}/consul.hcl"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+  notify: Restart Consul
+
+# 6. NEW Task: Deploy the Service Definition (Keycloak, Semaphore, etc.)
+- name: Deploy Service Definitions
+  ansible.builtin.template:
+    src: service.json.j2
+    dest: "{{ consul_config_dir }}/{{ item.name }}.json"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+  loop: "{{ consul_services }}"
+  when:
+    #- consul_services is defined
+    - item.group in group_names
+  tags: [ "services", "consul_config" ]
+  notify: Reload Consul
+    
+# 7. Existing Task: Copy agent token
+- name: Copy agent token
+  ansible.builtin.copy:
+    content: "{{ consul_agent_token }}"
+    dest: "{{ consul_config_dir }}/agent.token"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+  when: consul_agent_token != ""

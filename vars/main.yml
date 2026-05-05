@@ -1,0 +1,44 @@
+---
+consul_services:
+  - name: "keycloak"
+    url : https://keycloak.opstree.dev/
+    port: 8080
+    token: "{{ consul_agent_token }}"
+    group: "role_keycloak"
+
+  - name: "clickhouse"
+    url : https://clickhouse.opstree.dev/
+    port: 8123
+    token: "{{ consul_agent_token }}"
+    group: "role_clickhouse"
+
+  # - name: "opensearch"
+  #   port: 5601
+  #   token: "{{ consul_agent_token }}"
+  #   group: "role_opensearch"
+
+  - name: "wazuh"
+    port: 5601
+    token: "{{ consul_agent_token }}"
+    group: "role_wazuh"
+
+  - name: "minio"
+    url : https://minio.ldc.opstree.dev:8443/
+    token: "{{ consul_agent_token }}"
+    group: "role_minio"
+
+  - name: "nexus"
+    url : https://nexus.opstree.dev/
+    port: 8081
+    token: "{{ consul_agent_token }}"
+    group: "role_nexus"
+
+  - name: "dev-mysql-master"
+    port: 3306
+    token: "{{ consul_agent_token }}"
+    group: "role_agentmysql"
+
+  - name: "dev-mysql-slave"
+    port: 3306
+    token: "{{ consul_agent_token }}"
+    group: "role_slavemysql"

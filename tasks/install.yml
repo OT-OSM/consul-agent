@@ -1,0 +1,25 @@
+- name: Install dependencies
+  apt:
+    name:
+      - unzip
+      - wget
+    state: present
+    update_cache: yes
+
+- name: Create consul user
+  user:
+    name: "{{ consul_user }}"
+    system: yes
+    shell: /sbin/nologin
+    create_home: no
+
+- name: Download Consul
+  get_url:
+    url: "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip"
+    dest: /tmp/consul.zip
+
+- name: Unzip Consul
+  unarchive:
+    src: /tmp/consul.zip
+    dest: "{{ consul_install_dir }}"
+    remote_src: yes

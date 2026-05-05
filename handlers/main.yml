@@ -1,0 +1,11 @@
+---
+- name: Restart Consul
+  ansible.builtin.systemd:
+    name: consul
+    state: restarted
+    daemon_reload: yes
+
+- name: Reload Consul
+  ansible.builtin.command: consul reload
+  environment:
+    CONSUL_HTTP_TOKEN: "{{ consul_management_token }}"

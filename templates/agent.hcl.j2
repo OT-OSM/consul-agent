@@ -1,0 +1,61 @@
+# Core Settings
+datacenter = "{{ consul_datacenter }}"
+data_dir   = "{{ consul_data_dir }}"
+
+# Dynamic naming based on the server's actual hostname
+node_name  = "{{ ansible_hostname }}"
+server     = false
+
+# Encryption key
+encrypt = "{{ consul_encrypt_key }}"
+
+# ==========================================================
+# OPTIMIZED: Dynamic Discovery using Proxmox Tags
+# ==========================================================
+retry_join = [
+{% for host in groups['all'] %}
+  {% if 'role_consul_server' in hostvars[host]['tags'] | default([]) %}
+    "{{ host }}"{% if not loop.last %},{% endif %}
+  {% endif %}
+{% endfor %}
+]
+
+# Networking - Dynamic IP detection
+bind_addr   = "{{ ansible_default_ipv4.address }}"
+client_addr = "0.0.0.0"
+
+# ACL Settings
+{% if consul_acl_enabled %}
+acl {
+  enabled = true
+  tokens {
+    agent = "{{ consul_agent_token }}"
+    default = "{{ consul_management_token }}"
+  }
+}
+{% endif %}
+
+# Ports Configuration
+ports {
+{% if consul_tls_enabled %}
+  http  = -1
+  https = {{ consul_https_port }}
+{% else %}
+  http  = {{ consul_http_port }}
+  https = -1
+{% endif %}
+}
+
+# TLS Settings
+{% if consul_tls_enabled %}
+tls {
+  defaults {
+    ca_file   = "{{ consul_config_dir }}/tls.crt"
+    cert_file = "{{ consul_config_dir }}/tls.crt"
+    key_file  = "{{ consul_config_dir }}/tls.key"
+
+    verify_incoming = false
+    verify_outgoing = false
+  }
+}
+{% endif %}

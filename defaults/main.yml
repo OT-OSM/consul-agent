@@ -1,0 +1,35 @@
+---
+consul_version: "1.17.0"
+
+consul_user: "consul"
+consul_group: "consul"
+
+consul_install_dir: "/usr/local/bin"
+consul_config_dir: "/etc/consul.d"
+consul_data_dir: "/var/lib/consul"
+
+consul_node_name: "{{ inventory_hostname }}"
+consul_bind_addr: "{{ ansible_host }}"
+
+# IMPORTANT → agent mode
+consul_is_server: false
+
+# Consul servers (VERY IMPORTANT)
+consul_retry_join:
+  - "192.168.8.138"
+  - "192.168.8.220"
+  - "192.168.8.35"
+
+# ACL
+consul_acl_enabled: true
+consul_agent_token: "fec50ca6-6b33-99fe-d522-cb80ec89d6f4"
+consul_management_token: "3d21ef0e-3937-89af-f5b8-624fc0d2b8be"
+
+
+# TLS
+consul_tls_enabled: false
+
+consul_http_port: 8500
+consul_https_port: 8501
+consul_encrypt_key: ""
+consul_datacenter: "dc1"

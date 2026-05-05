@@ -1,0 +1,27 @@
+---
+
+- name: Debug - Show me the tags for this host
+  ansible.builtin.debug:
+    msg: "Host {{ inventory_hostname }} has these tags: {{ hostvars[inventory_hostname].tags | default('NO TAGS FOUND') }}"
+  tags: always
+  
+# 1. Load variables
+- name: Load service variables
+  ansible.builtin.include_vars: vars/main.yml
+
+# 2. DEBUG: See what tags Ansible actually sees (Check your Semaphore logs for this)
+- name: Debug - Show me the tags for this host
+  debug:
+    var: tags
+
+- name: Gate - Stop if host is not a designated Consul node
+  ansible.builtin.meta: end_host
+  when: >
+    tags is not defined or 
+    (tags | intersect(['role_keycloak', 'role_clickhouse', 'role_opensearch', 'consul_server','role_wazuh','role_minio','role_agentmysql','role_slavemysql','role_nexus']) | length == 0)
+  tags: always
+  
+# 4. RUN THE REST
+- include_tasks: install.yml
+- include_tasks: config.yml
+- include_tasks: service.yml
