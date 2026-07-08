@@ -42,3 +42,10 @@ consul_services:
     port: 3306
     token: "{{ consul_agent_token }}"
     group: "role_slavemysql"
+
+
+# Default Consul service discovery metadata
+
+default_service_tags:
+  - service-discovery
+
