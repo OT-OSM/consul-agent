@@ -1,0 +1,24 @@
+---
+
+- name: Ensure Consul config directory exists
+  file:
+    path: "{{ consul_config_dir }}"
+    state: directory
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: "0755"
+
+
+- name: Register services with Consul agent
+  template:
+    src: service.json.j2
+    dest: "{{ consul_config_dir }}/{{ item.name }}.json"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: "0644"
+  loop: "{{ consul_services }}"
+  when:
+    - consul_service_registration_enabled
+    - consul_services is defined
+  notify:
+    - Restart Consul
