@@ -6,6 +6,8 @@
     "port": {{ item.port }},
 {% endif %}
 
+    "token": "{{ item.token | default(consul_agent_token) }}",
+
 {% if item.tags is defined %}
     "tags": {{ item.tags | to_json }},
 {% else %}
