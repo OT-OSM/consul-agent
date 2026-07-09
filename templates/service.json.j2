@@ -6,35 +6,30 @@
     "port": {{ item.port }},
 {% endif %}
 
-    "token": "{{ item.token }}",
-
-    "tags": [
 {% if item.tags is defined %}
-{% for tag in item.tags %}
-      "{{ tag }}"{% if not loop.last %},{% endif %}
-{% endfor %}
+    "tags": {{ item.tags | to_json }},
 {% else %}
-{% for tag in consul_service_tags %}
-      "{{ tag }}"{% if not loop.last %},{% endif %}
-{% endfor %}
+    "tags": {{ consul_service_tags | to_json }},
 {% endif %}
-    ]
 
-{% if item.url is defined or item.port is defined %}
-    ,
+{% if item.health_check is defined %}
     "check": {
       "id": "{{ item.name }}-check",
       "name": "{{ item.name }} Health Check",
 
-{% if item.url is defined %}
-      "http": "{{ item.url }}",
-      "tls_skip_verify": true,
-{% else %}
-      "http": "http://{{ ansible_default_ipv4.address | default('localhost') }}:{{ item.port }}/",
+{% if item.health_check.type == "http" %}
+      "http": "{{ item.health_check.url }}",
+
+{% elif item.health_check.type == "tcp" %}
+      "tcp": "{{ item.health_check.url }}",
+
+{% elif item.health_check.type == "grpc" %}
+      "grpc": "{{ item.health_check.url }}",
+
 {% endif %}
 
-      "interval": "{{ consul_service_check_interval }}",
-      "timeout": "{{ consul_service_check_timeout }}"
+      "interval": "{{ item.health_check.interval | default(consul_service_check_interval) }}",
+      "timeout": "{{ item.health_check.timeout | default(consul_service_check_timeout) }}"
     }
 {% endif %}
 
